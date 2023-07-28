@@ -1,0 +1,164 @@
+---
+title: "Creating a species composition matrix for further analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating a species composition matrix for further analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DivInsight)
+data("Colombia")
+library(vegan)
+```
+
+A species composition matrix can be created using the data from a specific location. This is useful for further analyses.
+
+```{r}
+# use coordinates to clusterise data 
+Colombia_coordinate_ref <- clusterise_sites(
+  
+  dataframe = 
+    subset_by_coordinate_ref(
+      dataframe = Colombia,
+      coordinate_reference = c(-73.487520, 7.539986),
+      distance_threshold = 50000
+    ),
+  
+  cluster_min_length = 30 
+  
+)
+```
+
+`site_regroup()` can be used to group sites by a specified radius in metres.
+
+This method is a lot faster than running `clusterise_sites()` again with new parameters.
+
+```{r}
+# regroup sites with a radius of 1km
+cref_1km <- site_regroup(
+  
+  clusterised_object = Colombia_coordinate_ref,
+  regroup_radius = 1000
+  
+)
+```
+
+Species tables can be produced for each site using `generate_spec_tables()`. The number of individuals and species in each tables can be specified.
+
+Each table will consist of one row pertaining to the site's group and each column will be a species name.
+
+```{r}
+cref_1km_spectables <- generate_spec_tables(
+  
+  clusterised_object = cref_1km,
+  min_individuals = 30,
+  min_species = 10
+  
+)
+```
+
+The name of each table can be viewed where the first number represents which group the site is in.
+
+The following information is a date. Users should be aware of vastly different times between species tables as well as seasonal differences that may hinder the results of their analysis.
+
+using the $ operator is also a useful way to select which species tables to include in their species composition matrix.
+
+
+```{r}
+# view the names of each table
+print(names(cref_1km_spectables))
+
+# store the chosen species tables into a single list 
+species_table_list <- list(
+  
+  cref_1km_spectables$`17.2022-04-04`,
+  cref_1km_spectables$`29.2022-04-02`,
+  cref_1km_spectables$`16.2022-04-01`,
+  cref_1km_spectables$`26.2022-03-31`,
+  cref_1km_spectables$`1.2022-03-30`,
+  
+  cref_1km_spectables$`28.2022-03-29`,
+  cref_1km_spectables$`18.2022-03-28`,
+  cref_1km_spectables$`27.2022-03-26`,
+  cref_1km_spectables$`9.2022-03-25`,
+  cref_1km_spectables$`25.2022-03-23`,
+  
+  cref_1km_spectables$`8.2022-03-21`,
+  cref_1km_spectables$`7.2022-03-19`,
+  cref_1km_spectables$`24.2022-03-07`,
+  cref_1km_spectables$`23.2022-03-06`,
+  cref_1km_spectables$`19.2022-03-05`,
+  
+  cref_1km_spectables$`22.2022-02-27`,
+  cref_1km_spectables$`21.2022-02-15`,
+  cref_1km_spectables$`20.2022-02-14`
+  
+)     
+
+# use the generate_speccomm to generate a species composition matrix
+SCM1 <- generate_speccomm(species_table_list)
+```
+
+
+The choice to change the name of each row is optional.
+
+```{r}
+# change the row names of the matrix
+SCM1 <- as.data.frame(SCM1)
+
+row.names(SCM1) <- c(
+  
+  "17.2022-04-04",
+  "29.2022-04-02",
+  "16.2022-04-01",
+  "26.2022-03-31",
+  "1.2022-03-30",
+  
+  "28.2022-03-29",
+  "18.2022-03-28",
+  "27.2022-03-26",
+  "9.2022-03-25",
+  "25.2022-03-23",
+  
+  "8.2022-03-21",
+  "7.2022-03-19",
+  "24.2022-03-07",
+  "23.2022-03-06",
+  "19.2022-03-05",
+  
+  "22.2022-02-27",
+  "21.2022-02-15",
+  "20.2022-02-14"
+
+)
+
+SCM1 <- as.matrix(SCM1)
+
+```
+
+
+There are many analyses that can be done with a species composition matrix but here a species accumulation curve using the vegan package will be demonstrated.
+
+```{r}
+# create a species accumulation curve 
+speccurve1 <- specaccum(SCM1, method = "random")
+
+# plot the species accumulation curve
+plot(speccurve1, ci.type="poly", 
+     col="blue", 
+     ci.col="lightblue",
+     main = "Species accumulation curve for 15 Sites in coordinate reference site #1"
+)
+
+# view the predictions from the species accumulation curve
+print(speccurve1)
+```
