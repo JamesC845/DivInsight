@@ -58,6 +58,9 @@ Each table will consist of one row pertaining to the site's group and each colum
 Each table will consist of one row pertaining to the site's group and each column will be a species name.
 Each table will consist of one row pertaining to the site's group and each column will be a species name.
 Each table will consist of one row pertaining to the site's group and each column will be a species name.
+Each table will consist of one row pertaining to the site's group and each column will be a species name.
+Each table will consist of one row pertaining to the site's group and each column will be a species name.
+Each table will consist of one row pertaining to the site's group and each column will be a species name.
 
 ```{r}
 cref_1km_spectables <- generate_spec_tables(
