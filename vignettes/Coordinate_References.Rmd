@@ -19,11 +19,11 @@ library(DivInsight)
 data("Colombia")
 ```
 
-To get data for an exact location a pair of longitude/latitude coordinates can be used with `subset_by_coordinate_ref()`. 
+To subset data for an exact location a pair of longitude/latitude coordinates can be used with `subset_by_coordinate_ref()`. 
 
-The `coordinate_reference` argument will mark the centre of the location and the `distance_threshold` will mark the radius of location.
+The `coordinate_reference` argument will mark the centre of the location and the `distance_threshold` will mark the radius of the location in metres.
 
-Below this function is used as an argument value in the `clusterise_sites()` function to get clusterised data for two locations.
+Below this function is used as an argument value in the `clusterise_sites()` function to get clusterised data for two locations in Colombia. The radius of each location is set to 50km.
 
 ```{r}
 # clusterise data for a specific location 
@@ -55,7 +55,9 @@ Colombia_coordinate_ref_2 <- clusterise_sites(
 )
 ```
 
+
 The diversity over time for both sites can then be plotted.
+
 
 ```{r, fig.show='hold', fig.width=4, fig.height=3}
 # scatter plot for reference site 1
@@ -75,7 +77,9 @@ plot_sites_scatter_H(
 ) 
 ```
 
+
 The see where these patterns are happening a map can be created.
+
 
 ```{r}
 # create a new map using coordinates from first reference site
@@ -103,7 +107,9 @@ Colombia_coordinate_ref_map <-
   )
 ```
 
+
 The map is ready to be viewed.
+
 
 ```{r, fig.show='hold', fig.width=8, fig.height=6}
 # view the interactive map
