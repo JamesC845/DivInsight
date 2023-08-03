@@ -8,7 +8,7 @@
 #'
 #' @param clusterised_object An object created by the clusterise_sites function.
 #'
-#' @return A dataframe where each row pertains to a site and each column has time & location data as well as diversity index values.
+#' @return A dataframe where each row pertains to a site and each column has higher taxa labels, time & location data, as well as diversity index values.
 #' @export
 #'
 #' @examples # generate statistics using clusterised data from the Meta province of Colombia
@@ -45,7 +45,17 @@ generate_stats <- function(clusterised_object){
       stats_dataframe$stateProvince[i] <- clusterised_object[[1]][[i]]$stateProvince %>% unique
     }
 
-    stats_dataframe$order   <- clusterised_object[[1]][[1]]$order %>% unique
+    for(i in 1:length(clusterised_object[[1]])){
+      stats_dataframe$kingdom[i] <- clusterised_object[[1]][[i]]$kingdom %>% unique
+    }
+
+    for(i in 1:length(clusterised_object[[1]])){
+      stats_dataframe$phylum[i] <- clusterised_object[[1]][[i]]$phylum %>% unique
+    }
+
+    for(i in 1:length(clusterised_object[[1]])){
+      stats_dataframe$class[i] <- clusterised_object[[1]][[i]]$class %>% unique
+    }
 
     pielou <- function(shannon_index, composition_matrix){
       S <- specnumber(composition_matrix)

@@ -10,7 +10,7 @@ generate_stats(clusterised_object)
 \item{clusterised_object}{An object created by the clusterise_sites function.}
 }
 \value{
-A dataframe where each row pertains to a site and each column has time & location data as well as diversity index values.
+A dataframe where each row pertains to a site and each column has higher taxa labels, time & location data, as well as diversity index values.
 }
 \description{
 Calculates diversity index values for each site in a clusterised object.
