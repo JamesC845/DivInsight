@@ -8,8 +8,8 @@
 #'
 #' @param dataframe A dataframe with occurrence data for the chosen taxon and location.
 #' @param cluster_min_length The minimum number of observations in each cluster.
-#' @param day_split_min_length  By default the function filters out days with fewer than 10 observations. This value adjusts the minimum threshold.
 #' @param group_radius An optional value to have sites grouped. Group radius is measured in metres.
+#' @param day_split_min_length  By default the function filters out days with fewer than 10 observations. This value adjusts the minimum threshold.
 #'
 #' @return The function returns a 'clusterised object', which is a list containing two elements: The first element is a list of data clusters. The second element is a dataframe that includes centred coordinates for each site, group number, and date.
 #' @export
@@ -25,10 +25,8 @@ clusterise_sites <- function(
 
   dataframe,
   cluster_min_length,
-
-
-  day_split_min_length = 10,
-  group_radius = 40075000
+  group_radius = 40075000,
+  day_split_min_length = 10
 
 ){
 
