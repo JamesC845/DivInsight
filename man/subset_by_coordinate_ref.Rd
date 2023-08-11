@@ -21,9 +21,13 @@ Subsets an occurrence dataframe by using a pair of reference coordinates and a r
 }
 \examples{
 # subset the occurrence data returning only data points 50km from the reference coordinates
-\dontrun{subset_by_coordinate_ref(
+Colombia_site_1 <-  subset_by_coordinate_ref(
+
  dataframe = Colombia,
  coordinate_reference = c(-74.083310, 7.488485),
  distance_threshold = 50000
- )}
+
+)
+
+head(Colombia_site_1)
 }

@@ -16,12 +16,24 @@ An R dataframe containing the occurrence data from the GBIF object.
 Convert a GBIF object into workable R dataframe.
 }
 \examples{
-# convert the GBIF object containing occurrence data from 2000 to 2004
-\dontrun{df_data_Ants_Colombia_2000_to_2004 <- gbif_to_dataframe(
- GBIF_data_Ants_Colombia_2000_to_2004
-)}
-# convert the GBIF object containing occurence data from 2005 to 2008
-\dontrun{df_data_Ants_Colombia_2005_to_2008 <- gbif_to_dataframe(
- GBIF_data_Ants_Colombia_2005_to_2008
-)}
+# convert the GBIF object containing occurrence plant data from 2020 and 2019
+\donttest{
+ library(rgbif)
+
+ Cambodia_code <- isocodes[grep("Cambodia", isocodes$name), "code"]
+
+ Plant_taxonkey <- name_backbone("Plantae")$kingdomKey
+
+ plant_cambodia.gbif <- occ_search(
+   hasCoordinate = TRUE,
+   limit = 99990,
+   taxonKey = Plant_taxonkey,
+   year = c("2020", "2019"),
+   country = Cambodia_code
+ )
+
+ plant_cambodia.df <- gbif_to_dataframe(plant_cambodia.gbif)
+
+ head(plant_cambodia.df)
+}
 }

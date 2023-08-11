@@ -2,9 +2,11 @@ Package: DivInsight
 Type: Package
 Title: Diversity Index Calculation & Visualisation for Taxa and Location
 Version: 0.1.0
-Author: James Churchward
+Authors@R: 
+    person("James", "Churchward", role = c("aut", "cre", "cph"),
+           email = "jameschurchward1@outlook.com")
 Maintainer: James Churchward <jameschurchward1@outlook.com>
-Description: The functions in the DivInsight package can be used to repurpose occurrence data for calculating diversity index values, creating visuals, and generating species composition matrices for a chosen taxon and location.
+Description: Repurpose occurrence data for calculating diversity index values, creating visuals, and generating species composition matrices for a chosen taxon and location.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -15,6 +17,7 @@ Imports:
     dplyr,
     leaflet,
     ggplot2,
+    rgbif,
     stats,
     graphics
 Depends: 

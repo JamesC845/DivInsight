@@ -28,10 +28,16 @@ Cluster a large occurrence dataframe by date with the option to group each clust
 }
 \examples{
 # clusterise sites for the entire Santander province of Colombia
-\dontrun{clusterised_Santander <- clusterise_sites_large_dataframe(
+\donttest{Colombia_Santander_dataframe <- subset(Colombia, stateProvince == "Santander")
 
- dataframe = Colombia_Santander,
+clusterised_Santander <- clusterise_sites_large_dataframe(
+
+ dataframe = Colombia_Santander_dataframe,
  cluster_min_length = 30
 
-)}
+)
+
+print(clusterised_Santander[[2]])
+
+}
 }

@@ -6,6 +6,10 @@
 \alias{DivInsight-package}
 \title{DivInsight: Diversity Index Calculation & Visualisation for Taxa and Location}
 \description{
-The functions in the DivInsight package can be used to repurpose occurrence data for calculating diversity index values, creating visuals, and generating species composition matrices for a chosen taxon and location.
+Repurpose occurrence data for calculating diversity index values, creating visuals, and generating species composition matrices for a chosen taxon and location.
+}
+\author{
+\strong{Maintainer}: James Churchward \email{jameschurchward1@outlook.com} [copyright holder]
+
 }
 \keyword{internal}

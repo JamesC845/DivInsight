@@ -16,6 +16,15 @@ A dataframe where each row pertains to a site and each column has higher taxa la
 Calculates diversity index values for each site in a clusterised object.
 }
 \examples{
-# generate statistics using clusterised data from the Meta province of Colombia
-\dontrun{stats_Meta <- generate_stats(clusterised_Meta)}
+# generate species count tables with a minimum of 30 individuals from 5 species
+Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+
+clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+                                       cluster_min_length = 30,
+                                       group_radius = 20000
+)
+
+stats_Caquetá <- generate_stats(clusterised_Caquetá)
+
+head(stats_Caquetá)
 }

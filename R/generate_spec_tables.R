@@ -9,15 +9,26 @@
 #' @return A list of species counts tables.
 #' @export
 #'
-#' @examples # generate species count tables using a clusterised object.
-#'\dontrun{SCM_Santander_1 <- generate_speccomm(
+#' @examples # generate species count tables with a minimum of 30 individuals from 5 species
+#'Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
 #'
-#'  clusterised_object = Colombia_Santander_1,
+#'clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+#'                                        cluster_min_length = 30,
+#'                                        group_radius = 20000
+#')
 #'
+#'Spec_Tables_Caquetá <- generate_spec_tables(
+#'
+#'  clusterised_object = clusterised_Caquetá,
 #'  min_individuals = 30,
 #'  min_species = 5
 #'
-#')}
+#')
+#'
+#'print(Spec_Tables_Caquetá$`5.2016-03-22`)
+#'print(Spec_Tables_Caquetá$`5.2016-03-29`)
+#'print(Spec_Tables_Caquetá$`5.2016-03-30`)
+#'print(Spec_Tables_Caquetá$`5.2016-04-13`)
 generate_spec_tables <- function(
 
   clusterised_object,

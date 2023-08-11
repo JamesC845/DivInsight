@@ -19,9 +19,9 @@ library(DivInsight)
 data("Colombia")
 ```
 
-This is an introduction to the DivInsight package.
+This is an introduction to the 'DivInsight' package.
 
-We use DivInsight to repurpose historical occurrence taxon data for further analysis.
+We use 'DivInsight' to repurpose historical occurrence taxon data for further analysis.
 
 Included in the package is the Colombia dataset, which contains occurrence data for the taxon 'Formicidae' at the Family level from 2000 to 2023. This data was queried from the Global Biodiversity Information Facility (GBIF) database using the `rgbif` package.
 

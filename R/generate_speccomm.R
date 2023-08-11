@@ -7,8 +7,34 @@
 #' @return A species composition matrix
 #' @export
 #'
-#' @examples # create a SCM using a list of species
-#'\dontrun{SCM <- generate_speccomm(comb.df)}
+#' @examples # create a SCM using a list of species counts tables
+#'Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+#'
+#'Spec_Tables_Caquetá <- generate_spec_tables_df(
+#'
+#'  dataframe = Colombia_Caquetá_dataframe,
+#'  min_individuals = 30,
+#'  min_species = 5
+#'
+#')
+#'
+#'print(Spec_Tables_Caquetá$`2016-03-22`)
+#'print(Spec_Tables_Caquetá$`2016-03-29`)
+#'print(Spec_Tables_Caquetá$`2016-03-30`)
+#'print(Spec_Tables_Caquetá$`2016-04-13`)
+#'
+#'species_table_list <- list(
+#'
+#'  Spec_Tables_Caquetá$`2016-03-22`,
+#'  Spec_Tables_Caquetá$`2016-03-29`,
+#'  Spec_Tables_Caquetá$`2016-03-30`,
+#'  Spec_Tables_Caquetá$`2016-04-13`
+#'
+#')
+#'
+#'SCM_Caquetá_2016 <- generate_speccomm(species_table_list)
+#'
+#'print(SCM_Caquetá_2016)
 generate_speccomm <- function(spec_table_list){
 
   suppressWarnings({

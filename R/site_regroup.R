@@ -9,6 +9,25 @@
 #'
 #' @return The clusterised object with new group labels.
 #' @export
+#'
+#' @examples # regroup the sites with a group radius of 5km instead of 20km
+#'Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+#'
+#'clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+#'                                        cluster_min_length = 30,
+#'                                        group_radius = 20000
+#')
+#'
+#'print(clusterised_Caquetá[[2]])
+#'
+#'clusterised_Caquetá_5km_sites <- site_regroup(
+#'
+#'  clusterised_object = clusterised_Caquetá,
+#'  regroup_radius = 5000
+#'
+#')
+#'
+#'print(clusterised_Caquetá_5km_sites[[2]])
 site_regroup <- function(clusterised_object,
                          regroup_radius = 40075000){
 

@@ -9,10 +9,18 @@
 #' @param ylabel The Y axis label with "Diversity (H)" as default.
 #' @param main_title The main title with "Shannon's H over Time" as default.
 #'
+#' @return Returns a base R plot in the plot panel, depicting the trend of diversity index values over time.
 #' @export
 #'
-#' @examples # plot trend charts
-#' \dontrun{plot_sites_trend_H(clusterised_object = clusterised_Meta)}
+#' @examples # create a trend chart showing the diversity over time at the Caquetá province
+#'Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+#'
+#'clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+#'                                        cluster_min_length = 30,
+#'                                        group_radius = 20000
+#')
+#'
+#'plot_sites_trend_H(clusterised_Caquetá)
 plot_sites_trend_H <- function(clusterised_object, xlabel = "", ylabel = "Diversity (H)", main_title = "Shannon's H over Time"){
 
 

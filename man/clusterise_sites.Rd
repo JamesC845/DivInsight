@@ -7,8 +7,8 @@
 clusterise_sites(
   dataframe,
   cluster_min_length,
-  day_split_min_length = 10,
-  group_radius = 40075000
+  group_radius = 40075000,
+  day_split_min_length = 10
 )
 }
 \arguments{
@@ -16,9 +16,9 @@ clusterise_sites(
 
 \item{cluster_min_length}{The minimum number of observations in each cluster.}
 
-\item{day_split_min_length}{By default the function filters out days with fewer than 10 observations. This value adjusts the minimum threshold.}
-
 \item{group_radius}{An optional value to have sites grouped. Group radius is measured in metres.}
+
+\item{day_split_min_length}{By default the function filters out days with fewer than 10 observations. This value adjusts the minimum threshold.}
 }
 \value{
 The function returns a 'clusterised object', which is a list containing two elements: The first element is a list of data clusters. The second element is a dataframe that includes centred coordinates for each site, group number, and date.
@@ -27,11 +27,13 @@ The function returns a 'clusterised object', which is a list containing two elem
 Cluster occurrence data by date with the option to group each cluster using a specified radius distance. Each of these clusters of data represents a site and a pair of centered coordinates for each site is generated.
 }
 \examples{
-# clusterise sites for the entire Meta province of Colombia
-\dontrun{clusterised_Meta <- clusterise_sites(dataframe = Colombia_Meta_ants_dataframe,
-cluster_min_length = 30)}
-# clusterise sites in the Meta province of Colombia with groups within a 20km radius
-\dontrun{clusterised_Meta <- clusterise_sites(dataframe = Colombia_Meta_ants_dataframe,
-cluster_min_length = 30,
-    group_radius = 20000)}
+# clusterise sites for the entire Huila province of Colombia
+Colombia_Huila_dataframe <- subset(Colombia, stateProvince == "Huila")
+
+clusterised_Huila <- clusterise_sites(dataframe = Colombia_Huila_dataframe,
+                                      cluster_min_length = 30,
+                                      group_radius = 20000
+)
+
+print(clusterised_Huila[[2]])
 }

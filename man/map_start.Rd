@@ -20,12 +20,27 @@ A Viewer object: an interactive map.
 Create interactive map using centred site coordinates.
 }
 \examples{
-# create a new map using coordinates from site 1 in the Meta province of Colombia
-\dontrun{Colombia_Meta_map <-
+# create an interactive map using one of the group's coordinates
+Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+
+clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+                                       cluster_min_length = 30,
+                                       group_radius = 20000
+)
+
+print(clusterised_Caquetá[[2]])
+
+Colombia_Caquetá_3 <- filter_groups_by_number(clusterised_Caquetá, 3)
+Colombia_Caquetá_5 <- filter_groups_by_number(clusterised_Caquetá, 5)
+Colombia_Caquetá_7 <- filter_groups_by_number(clusterised_Caquetá, 7)
+
+Colombia_Caquetá_map <-
 
  map_start(
-   clusterised_object = Colombia_Meta_1,
-   site_name = "Meta#1",
+
+   clusterised_object = Colombia_Caquetá_3,
+   site_name = "Caquetá#3",
    colour = "green"
- )}
+
+ )
 }

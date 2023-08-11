@@ -9,12 +9,24 @@
 #' @export
 #'
 #' @examples # return groups that have at least 10 sites
-#' \dontrun{filter_groups_by_minsize(
 #'
-#' clusterised_object = clusterised_Meta_20km_groups,
-#' min_group_size = 10
+#' Colombia_Huila_dataframe <- subset(Colombia, stateProvince == "Huila")
 #'
-#' )}
+#' clusterised_Huila <- clusterise_sites(dataframe = Colombia_Huila_dataframe,
+#'                                       cluster_min_length = 30,
+#'                                       group_radius = 20000
+#' )
+#'
+#' clusterised_Huila_largegroups <-
+#'   filter_groups_by_minsize(
+#'
+#'     clusterised_object = clusterised_Huila,
+#'     min_group_size = 10
+#'
+#')
+#'
+#' print(clusterised_Huila_largegroups[[2]])
+#'
 filter_groups_by_minsize <- function(clusterised_object, min_group_size){
 
   split_centred_coordinates <- split(clusterised_object[[2]],

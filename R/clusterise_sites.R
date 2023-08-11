@@ -14,13 +14,15 @@
 #' @return The function returns a 'clusterised object', which is a list containing two elements: The first element is a list of data clusters. The second element is a dataframe that includes centred coordinates for each site, group number, and date.
 #' @export
 #'
-#' @examples # clusterise sites for the entire Meta province of Colombia
-#' \dontrun{clusterised_Meta <- clusterise_sites(dataframe = Colombia_Meta_ants_dataframe,
-#' cluster_min_length = 30)}
-#' @examples # clusterise sites in the Meta province of Colombia with groups within a 20km radius
-#' \dontrun{clusterised_Meta <- clusterise_sites(dataframe = Colombia_Meta_ants_dataframe,
-#' cluster_min_length = 30,
-#'     group_radius = 20000)}
+#' @examples # clusterise sites for the entire Huila province of Colombia
+#' Colombia_Huila_dataframe <- subset(Colombia, stateProvince == "Huila")
+#'
+#' clusterised_Huila <- clusterise_sites(dataframe = Colombia_Huila_dataframe,
+#'                                       cluster_min_length = 30,
+#'                                       group_radius = 20000
+#' )
+#'
+#' print(clusterised_Huila[[2]])
 clusterise_sites <- function(
 
   dataframe,

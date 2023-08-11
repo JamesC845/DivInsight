@@ -18,8 +18,21 @@ A new clusterised object that only contains sites from the specified group.
 Filter a clusterised object that has been assigned groups and remove groups that are not a specified label.
 }
 \examples{
-# extract groups 6, 5, and 1 from a clusterised object
-\dontrun{Colombia_Meta_6 <- filter_groups_by_name(clusterised_Meta_20km_groups, 6)}
-\dontrun{Colombia_Meta_5 <- filter_groups_by_name(clusterised_Meta_20km_groups, 5)}
-\dontrun{Colombia_Meta_1 <- filter_groups_by_name(clusterised_Meta_20km_groups, 1)}
+# extract groups 3, 5, and 7 from a clusterised object
+Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+
+clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+                                       cluster_min_length = 30,
+                                       group_radius = 20000
+)
+
+print(clusterised_Caquetá[[2]])
+
+Colombia_Caquetá_3 <- filter_groups_by_number(clusterised_Caquetá, 3)
+Colombia_Caquetá_5 <- filter_groups_by_number(clusterised_Caquetá, 5)
+Colombia_Caquetá_7 <- filter_groups_by_number(clusterised_Caquetá, 7)
+
+print(Colombia_Caquetá_3[[2]])
+print(Colombia_Caquetá_5[[2]])
+print(Colombia_Caquetá_7[[2]])
 }

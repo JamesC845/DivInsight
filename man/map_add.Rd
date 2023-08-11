@@ -22,14 +22,51 @@ Coordinate pins to be added to an existing interactive map object.
 Add coordinate pins to an existing interactive map.
 }
 \examples{
-# add coordinate pins to an existing map object
-\dontrun{Colombia_Meta_map <-
+# add site coordinates to an existing map
+Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+
+clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+                                       cluster_min_length = 30,
+                                       group_radius = 20000
+)
+
+print(clusterised_Caquetá[[2]])
+
+Colombia_Caquetá_3 <- filter_groups_by_number(clusterised_Caquetá, 3)
+Colombia_Caquetá_5 <- filter_groups_by_number(clusterised_Caquetá, 5)
+Colombia_Caquetá_7 <- filter_groups_by_number(clusterised_Caquetá, 7)
+
+Colombia_Caquetá_map <-
+
+ map_start(
+
+   clusterised_object = Colombia_Caquetá_3,
+   site_name = "Caquetá#3",
+   colour = "green"
+
+ )
+
+ Colombia_Caquetá_map <-
 
  map_add(
-   existing_map = Colombia_Meta_map,
 
-   clusterised_object = Colombia_Meta_5,
-   site_name = "Meta#5",
+   existing_map = Colombia_Caquetá_map,
+
+   clusterised_object = Colombia_Caquetá_5,
+   site_name = "Caquetá#5",
    colour = "purple"
- )}
+
+ )
+
+ Colombia_Caquetá_map <-
+
+ map_add(
+
+   existing_map = Colombia_Caquetá_map,
+
+   clusterised_object = Colombia_Caquetá_7,
+   site_name = "Caquetá#7",
+   colour = "blue"
+
+ )
 }

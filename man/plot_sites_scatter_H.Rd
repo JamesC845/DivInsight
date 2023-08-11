@@ -20,10 +20,20 @@ plot_sites_scatter_H(
 
 \item{main_title}{The main label with "Shannon's H over Time" as default.}
 }
+\value{
+Returns a ggplot2 scatter plot in the plot panel, showing the relationship between dates and diversity index values.
+}
 \description{
 Plot Shannon's H on the Y axis and dates on the X axis with scaled spacing for each date and scattered points.
 }
 \examples{
-# plot scatter charts
-\dontrun{plot_sites_scatter_H(Colombia_Meta_6, main = "Shannons H at Meta#6")}
+# create a scatter plot showing the diversity over time at the Caquetá province
+Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+
+clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+                                       cluster_min_length = 30,
+                                       group_radius = 20000
+)
+
+plot_sites_scatter_H(clusterised_Caquetá)
 }

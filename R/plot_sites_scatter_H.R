@@ -9,10 +9,18 @@
 #' @param ylabel The Y axis label with "Diversity (H)" as default.
 #' @param main_title The main label with "Shannon's H over Time" as default.
 #'
+#' @return Returns a ggplot2 scatter plot in the plot panel, showing the relationship between dates and diversity index values.
 #' @export
 #'
-#' @examples # plot scatter charts
-#' \dontrun{plot_sites_scatter_H(Colombia_Meta_6, main = "Shannons H at Meta#6")}
+#' @examples # create a scatter plot showing the diversity over time at the Caquetá province
+#'Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
+#'
+#'clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
+#'                                        cluster_min_length = 30,
+#'                                        group_radius = 20000
+#')
+#'
+#'plot_sites_scatter_H(clusterised_Caquetá)
 plot_sites_scatter_H <- function(clusterised_object,
                                  xlabel = "Date",
                                  ylabel = "Diversity (H)",

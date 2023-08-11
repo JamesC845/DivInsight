@@ -9,15 +9,21 @@
 #' @return A list of species counts tables.
 #' @export
 #'
-#' @examples # generate species count tables for the entire country of Colombia.
-#'\dontrun{SCM_Colombia <- generate_speccomm_df(
+#' @examples # generate species count tables with a minimum of 30 individuals from 5 species
+#'Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
 #'
-#'  dataframe = Colombia,
+#'Spec_Tables_Caquetá <- generate_spec_tables_df(
 #'
-#'  min_individuals = 50,
-#'  min_species = 10
+#'  dataframe = Colombia_Caquetá_dataframe,
+#'  min_individuals = 30,
+#'  min_species = 5
 #'
-#')}
+#')
+#'
+#'print(Spec_Tables_Caquetá$`2016-03-22`)
+#'print(Spec_Tables_Caquetá$`2016-03-29`)
+#'print(Spec_Tables_Caquetá$`2016-03-30`)
+#'print(Spec_Tables_Caquetá$`2016-04-13`)
 generate_spec_tables_df <- function(
 
   dataframe,
