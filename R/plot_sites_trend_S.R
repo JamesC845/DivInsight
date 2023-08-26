@@ -1,18 +1,18 @@
-#' Plot H against Date
+#' Plot Species Richness against Date
 #'
-#' Plot Shannon's H on the Y axis and dates on the X axis with uniform spacing for each date and a line of best fit.
+#' Plot Species Richness on the Y axis and dates on the X axis with uniform spacing for each date and a line of best fit.
 #'
 #' @import dplyr
 #'
 #' @param clusterised_object An object created by the clusterise_sites function.
 #' @param xlabel The X axis label.
-#' @param ylabel The Y axis label with "Diversity (H)" as default.
-#' @param main_title The main title with "Shannon's H Over Time" as default.
+#' @param ylabel The Y axis label with "Species Richness (S)" as default.
+#' @param main_title The main title with "Species Richness Over Time" as default.
 #'
 #' @return Returns a base R plot in the plot panel, depicting the trend of diversity index values over time.
 #' @export
 #'
-#' @examples # create a trend chart showing species diversity values over time at the Caquetá province
+#' @examples # create a trend chart showing species richness values over time at the Caquetá province
 #'Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
 #'
 #'clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
@@ -20,8 +20,8 @@
 #'                                        group_radius = 20000
 #')
 #'
-#'plot_sites_trend_H(clusterised_Caquetá)
-plot_sites_trend_H <- function(clusterised_object, xlabel = "", ylabel = "Diversity (H)", main_title = "Shannon's H over Time"){
+#'plot_sites_trend_S(clusterised_Caquetá)
+plot_sites_trend_S <- function(clusterised_object, xlabel = "", ylabel = "Diversity (S)", main_title = "Species Richness over Time"){
 
 
 
@@ -33,7 +33,7 @@ plot_sites_trend_H <- function(clusterised_object, xlabel = "", ylabel = "Divers
 
 
   plot(x = stats_dataframe$date %>% as.ordered,
-       y = stats_dataframe$H,
+       y = stats_dataframe$S,
 
        xlab = xlabel,
        ylab = ylabel,
@@ -44,6 +44,6 @@ plot_sites_trend_H <- function(clusterised_object, xlabel = "", ylabel = "Divers
        las = 2
   )
 
-  abline(lm(stats_dataframe$H ~ stats_dataframe$date %>% as.ordered %>% as.numeric ))
+  abline(lm(stats_dataframe$S ~ stats_dataframe$date %>% as.ordered %>% as.numeric ))
 
 }

@@ -1,0 +1,397 @@
+---
+title: "Diversity Statistics: Auto Clustering, Charting, and Mapping"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Diversity Statistics: Auto Clustering, Charting, and Mapping}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width = 1000)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DivInsight)
+data("Colombia")
+library(dplyr)
+library(gridExtra)
+```
+
+## Introduction
+
+The `DivInsight` package can be used to repurpose historical occurrence taxon data in order to generate diversity index values for different dates and locations. 
+
+&nbsp;
+
+Included in the package is the Colombia dataset, which contains occurrence data for the taxon 'Formicidae' at the Family level from 2000 to 2023. This data was queried from the Global Biodiversity Information Facility (GBIF) database using the `rgbif` package.
+
+&nbsp;
+
+Each row of the occurrence dataframe has data for an observed individual. The dataset has many variables but the most important ones for the functions in `DivInsight` pertain to taxa names, coordinate location, and dates of the observations. 
+
+## View occurrence dataframe
+
+```{r}
+head(Colombia[c(2:4, 31:32, 45)], 10)
+```
+
+## Clusterise data from an entire province
+
+The Colombia dataset can be subset by province then the most important function in the package `clusterise_sites()` can be performed. This function clusters data by date and generates centered coordinates for each cluster. As a result, these data clusters represent sites from various dates and locations.
+
+&nbsp;
+
+```{r}
+Colombia_ValleCauca_dataframe <- subset(Colombia, stateProvince == "Valle del Cauca")
+
+
+clusterised_ValleCauca_20kmGroups <- clusterise_sites(
+  
+  dataframe = Colombia_ValleCauca_dataframe,
+  cluster_min_length = 30,
+  group_radius = 20000
+  
+)
+```
+
+&nbsp;
+
+Furthermore, by using the optional argument `group_radius`, the sites can be grouped using a specified radius in metres.
+
+## Generate diversity statistics for each site
+
+Once the data has been 'clusterised' a dataframe, where each row pertains to a site, can be produced by using `generate_stats()`. This information includes dates of observations, centred coordinates, and diversity indices. The indices included are: Species Richness (S), Shannon Diversity (H), Simpson Diversity (D), Inverse Simpson (Dinv), Margalef's Diversity (d), and Pielou's Evenness (J).
+
+```{r}
+stats_ValleCauca <- generate_stats(clusterised_ValleCauca_20kmGroups)
+
+
+print(stats_ValleCauca)
+```
+
+## Plot diversity statistics over time
+
+Package functions can be used to easily plot diversity values over time.
+
+```{r, fig.show='hold', fig.width=8, fig.height=6}
+plot_sites_trend_H(
+  clusterised_object = clusterised_ValleCauca_20kmGroups,
+  main_title = "Formicidae diversity in the Valle del Cauca province"
+)
+```
+
+##
+
+```{r, fig.show='hold', fig.width=8, fig.height=6}
+plot_sites_trend_S(
+  clusterised_object = clusterised_ValleCauca_20kmGroups,
+  main_title = "Formicidae richness in the Valle del Cauca province"
+)
+```
+
+##
+
+```{r, fig.show='hold', fig.width=8, fig.height=6}
+plot_sites_trend_N(
+  clusterised_object = clusterised_ValleCauca_20kmGroups,
+  main_title = "Formicidae abundance in the Valle del Cauca province"
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## View the site metadata
+
+The clusterised object contains two elements. The first element contains the clustered data and the second contains metadata. The metadata has centred coordinates and dates for each site as well as a group label.  
+
+&nbsp;
+
+When the `group_radius` argument is used in the `clusterise_sites()` function a label is assigned to each group. By using the `[[2]]` index, the metadata can be viewed. The column labeled `site_group` displays the group labels.
+
+&nbsp;
+
+```{r}
+print(clusterised_ValleCauca_20kmGroups[[2]])
+```
+
+&nbsp;
+
+Also, base R commands can be used to quickly see how many sites there are in each group and help us to decide which groups to examine further.
+
+```{r}
+clusterised_ValleCauca_20kmGroups[[2]]$site_group %>% table %>% sort %>% print
+```
+
+## Examine groups further
+
+Here, groups 2, 10, 7, and 5 are examined further by using `filter_groups_by_number()` to store each group's data then plot using `plot_sites_scatter_H()`.
+
+```{r, fig.show='hold', fig.width=8, fig.height=3, out.width="130%"}
+ValleCauca_2 <- filter_groups_by_number(clusterised_ValleCauca_20kmGroups, 2)
+ValleCauca_10 <- filter_groups_by_number(clusterised_ValleCauca_20kmGroups, 10)
+ValleCauca_7 <- filter_groups_by_number(clusterised_ValleCauca_20kmGroups, 7)
+ValleCauca_5 <- filter_groups_by_number(clusterised_ValleCauca_20kmGroups, 5)
+
+grid.arrange(
+  plot_sites_scatter_H(ValleCauca_2,  main = "Shannon's H at ValleCauca #2"), 
+  plot_sites_scatter_H(ValleCauca_10, main = "Shannon's H at ValleCauca #10"),
+  ncol = 2
+)
+
+grid.arrange(
+  plot_sites_scatter_H(ValleCauca_7, main = "Shannon's H at ValleCauca #7"),
+  plot_sites_scatter_H(ValleCauca_5, main = "Shannon's H at ValleCauca #5"),
+  ncol = 2
+)
+```
+
+## Create maps for grouped sites
+
+The charts show varying patterns of diversity over available time frames but it is important to know where these changes are taking place. `map_start()` can be used to create a new map object and `map_add()` can be used to add coordinate information. 
+
+&nbsp;
+
+```{r, fig.show='hold', fig.width=8, fig.height=6}
+# create a new map using group 1's coordinates
+Colombia_ValleCauca_map <- 
+  
+  map_start(
+    
+    clusterised_object = ValleCauca_2,
+    site_name = "ValleCauca #2",
+    colour = "green"
+    
+  )
+
+# add group 5's coordinates to the map object 
+Colombia_ValleCauca_map <-
+  
+  map_add(
+    
+    existing_map = Colombia_ValleCauca_map,
+    
+    clusterised_object = ValleCauca_10,
+    site_name = "ValleCauca #10",
+    colour = "purple"
+    
+  )
+
+# add group 6's coordinates to the map object
+Colombia_ValleCauca_map <-
+  
+  map_add(
+    
+    existing_map = Colombia_ValleCauca_map,
+    
+    clusterised_object = ValleCauca_7,
+    site_name = "ValleCauca #7",
+    colour = "blue"
+    
+  )
+
+# add group 8's coordinates to the map object
+Colombia_ValleCauca_map <-
+  
+  map_add(
+    
+    existing_map = Colombia_ValleCauca_map,
+    
+    clusterised_object = ValleCauca_5,
+    site_name = "ValleCauca #5",
+    colour = "red"
+    
+  )
+
+
+# view the map
+Colombia_ValleCauca_map
+```
+
+## Clusterise data using coordinates
+
+To subset data for an exact location a pair of longitude/latitude coordinates can be used with `subset_by_coordinate_ref()`. The `coordinate_reference` argument will mark the centre of the location and the `distance_threshold` will mark the radius of the location in metres.
+
+&nbsp;
+
+Below this function is used in an argument value in the `clusterise_sites()` function to get clusterised data for two locations in Colombia. The radius of each location is set to 25km.
+
+```{r}
+# clusterise coordinate reference location 1
+clusterised_Colombia_CoordRef_1 <- clusterise_sites(
+  
+  dataframe =
+    
+    subset_by_coordinate_ref(
+      dataframe = Colombia,
+      coordinate_reference = c(-73.325377, 3.956982),
+      distance_threshold = 25000),
+  
+  cluster_min_length = 30 
+  
+)
+
+
+# clusterise coordinate reference location 2
+clusterised_Colombia_CoordRef_2 <- clusterise_sites(
+  
+  dataframe = 
+    
+    subset_by_coordinate_ref(
+      dataframe = Colombia,
+      coordinate_reference = c(-71.889919, 4.470524),
+      distance_threshold = 25000),
+  
+  cluster_min_length = 30 
+  
+)
+
+
+# view meta data for location 1
+print(clusterised_Colombia_CoordRef_1[[2]])
+
+# view meta data for location 2
+print(clusterised_Colombia_CoordRef_2[[2]])
+```
+
+
+
+
+
+
+
+
+
+
+
+## Plot scatter plots for coordinate reference sites
+
+```{r, fig.show='hold', fig.width=8, fig.height=3, out.width="130%"}
+grid.arrange(
+  
+  plot_sites_scatter_H(
+    
+    clusterised_object = clusterised_Colombia_CoordRef_1,
+    main = "Diversity at coordinate site #1"
+  ), 
+  
+  plot_sites_scatter_H(
+    
+    clusterised_object = clusterised_Colombia_CoordRef_2,
+    main = "Diversity at coordinate site #2"
+  ), 
+  
+  ncol = 2
+  
+)
+
+grid.arrange(
+  
+  plot_sites_scatter_S(
+    
+    clusterised_object = clusterised_Colombia_CoordRef_1,
+    main = "Richness at coordinate site #1"
+  ), 
+  
+  plot_sites_scatter_S(
+    
+    clusterised_object = clusterised_Colombia_CoordRef_2,
+    main = "Richness at coordinate site #2"
+  ), 
+  
+  ncol = 2
+  
+)
+
+grid.arrange(
+  
+  plot_sites_scatter_N(
+    
+    clusterised_object = clusterised_Colombia_CoordRef_1,
+    main = "Abundance at coordinate site #1"
+  ), 
+  
+  plot_sites_scatter_N(
+    
+    clusterised_object = clusterised_Colombia_CoordRef_2,
+    main = "Abundance at coordinate site #2"
+  ), 
+  
+  ncol = 2
+  
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Create maps for grouped sites
+
+A map can be created to see where these patterns are happening .
+
+```{r, fig.show='hold', fig.width=8, fig.height=6}
+# create a new map using coordinates from first reference site
+Colombia_CoordRef_map <-
+  
+  map_start(
+    
+    clusterised_object = clusterised_Colombia_CoordRef_1,
+    site_name = "Coord ref site #1",    
+    colour = "purple"
+    
+  )
+
+# add to the existing map using information from the second reference site
+Colombia_CoordRef_map <-
+  
+  map_add(
+    
+    existing_map = Colombia_CoordRef_map,
+    
+    clusterised_object = clusterised_Colombia_CoordRef_2,
+    site_name = "Coord ref Site #2",
+    colour = "darkred"
+    
+  )
+
+# view the map
+Colombia_CoordRef_map
+```
+
+
+

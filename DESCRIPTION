@@ -1,7 +1,7 @@
 Package: DivInsight
 Type: Package
 Title: Diversity Index Calculation & Visualisation for Taxa and Location
-Version: 0.1.0
+Version: 1.2.0
 Authors@R: 
     person("James", "Churchward", role = c("aut", "cre", "cph"),
            email = "jameschurchward1@outlook.com")
@@ -25,7 +25,8 @@ Depends:
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    gridExtra
 Config/testthat/edition: 3
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr

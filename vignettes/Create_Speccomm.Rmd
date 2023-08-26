@@ -1,11 +1,15 @@
 ---
-title: "Creating a species composition matrix for further analysis"
+title: "Species Composition Matrix Generation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating a species composition matrix for further analysis}
+  %\VignetteIndexEntry{Species Composition Matrix Generation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width = 10000)
+```
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -20,11 +24,34 @@ data("Colombia")
 library(vegan)
 ```
 
-A species composition matrix can be created using data from a specific location. Species composition matrices are useful for many ecological analyses.
+## Introduction
+
+The `DivInsight` package can be used to repurpose historical occurrence taxon data in order to generate a species composition matrix (SCM) for a specific time and location. SCMs are useful for many ecological analyses.
+
+&nbsp;
+
+Included in the package is the Colombia dataset, which contains occurrence data for the taxon 'Formicidae' at the Family level from 2000 to 2023. This data was queried from the Global Biodiversity Information Facility (GBIF) database using the `rgbif` package.
+
+&nbsp;
+
+Each row of the occurrence dataframe has data for an observed individual. The dataset has many variables but the most important ones for the functions in `DivInsight` pertain to taxa names, coordinate location, and dates of the observations. 
+
+## View occurrence dataframe
 
 ```{r}
-# use coordinates to clusterise data 
-Colombia_coordinate_ref <- clusterise_sites(
+head(Colombia[c(2:4, 31:32, 45)], 10)
+```
+
+## Clusterise and regroup data 
+
+The occurrence data must first be organised using `clusterise_sites()`. This function clusters data by date and generates centered coordinates for each cluster. As a result, these data clusters represent sites from various dates and locations.
+
+&nbsp;
+
+A pair of longitude/latitude coordinates are used as a centre point and the distance threshold is set to 50km. Therefore, occurrence data within a 50km radius from the centre point will be clusterised.
+
+```{r}
+CoordRef_Sites <- clusterise_sites(
   
   dataframe = 
     subset_by_coordinate_ref(
@@ -36,83 +63,105 @@ Colombia_coordinate_ref <- clusterise_sites(
   cluster_min_length = 30 
   
 )
+
+print(CoordRef_Sites[[2]])
 ```
 
-`site_regroup()` can be used to group sites by a specified radius in metres. This method is a lot faster than running `clusterise_sites()` again with new parameters.
+An optional argument, `group_radius`, can be use with `clusterise_sites()` to group sites based on a specified radius. However, this argument was not used in this example; that's why all of the group labels are the same.
 
-This will group, and therefore separate, sites that are further than 1km from one another. 
+&nbsp;
+
+`site_regroup()` can be used to group clusterised sites by using their centred coordinates. A radius for each group can be specified using the `regroup_radius` argument. This method is much faster than running `clusterise_sites()` again with different parameters and is also useful when experimenting with different geographical ranges. 
+
+&nbsp;
+
+In the following example the regroup radius is set to 1km. Therefore, sites farther than 1km from one another will be separated into different groups.
 
 ```{r}
-# regroup sites with a radius of 1km
-cref_1km <- site_regroup(
+CoordRef_Sites_1km <- site_regroup(
   
-  clusterised_object = Colombia_coordinate_ref,
+  clusterised_object = CoordRef_Sites,
   regroup_radius = 1000
   
 )
+
+print(CoordRef_Sites_1km[[2]])
 ```
 
-Species tables can be produced for each site using `generate_spec_tables()`. The number of individuals and species in each table can be specified using the `min_individuals` and `min_species` arguments.
+When comparing the `site_group` columns in the metadata before and after regrouping it can be seen that there are many different groups which means these sites are farther than 1km from one another. Geographically this makes these sites suitable to be used to create an SCM.
 
-Each table will consist of one row pertaining to the site and each column will be a species name. Each of these tables will be stored into a list.
+&nbsp;
+
+Furthermore, since each site has data from individual dates and these dates are close to one another in terms of time, many of these sites will be suitable for combination to create an SCM. This would provide a snapshot of a specific timeframe.
+
+## Generate species tables
+
+Species tables can be produced for each site using `generate_spec_tables()`. The number of individuals and species in each table can be specified using the `min_individuals` and `min_species` arguments. Each table will consist of one row pertaining to the site and each column will be a species name. Each of these tables will be stored into a list.
 
 ```{r}
-cref_1km_spectables <- generate_spec_tables(
+CoordRef_Sites_1km_spectables <- generate_spec_tables(
   
-  clusterised_object = cref_1km,
+  clusterised_object = CoordRef_Sites_1km,
   min_individuals = 30,
   min_species = 10
   
 )
+
+
+CoordRef_Sites_1km_spectables[[1]]
+
+CoordRef_Sites_1km_spectables[[2]]
+
+CoordRef_Sites_1km_spectables[[3]]
 ```
 
-The name of each table can be viewed either by using `names()` or the `$` operator.
+## Create a species composition matrix
 
-The first number of each table name represents which group the site belongs to and the rest of the table name shows the date the individuals were observed. 
-
-Users should consider times between species tables, as well as seasonal changes, when choosing which tables to create their matrix.
-
-Below we create a matrix using 18 sites from 18 different groups from mid-February to early-April in 2022.
+The name of each species table can be viewed either by using `names()` or the `$` operator. In each name the number that precedes the date is the group label. This is a number that represents the group that each site belongs to. Users should consider times between species tables, as well as seasonal changes, when choosing which tables to create their matrix.
 
 ```{r}
-# view the names of each table
-print(names(cref_1km_spectables))
+print(names(CoordRef_Sites_1km_spectables))
+```
 
-# store the chosen species tables into a single list 
+&nbsp;
+
+In the following example `generate_speccomm()` is used to create an SCM using 18 sites from 18 different groups from mid-February to early-April in 2022.
+
+```{r}
 species_table_list <- list(
   
-  cref_1km_spectables$`17.2022-04-04`,
-  cref_1km_spectables$`29.2022-04-02`,
-  cref_1km_spectables$`16.2022-04-01`,
-  cref_1km_spectables$`26.2022-03-31`,
-  cref_1km_spectables$`1.2022-03-30`,
+  CoordRef_Sites_1km_spectables$`17.2022-04-04`,
+  CoordRef_Sites_1km_spectables$`29.2022-04-02`,
+  CoordRef_Sites_1km_spectables$`16.2022-04-01`,
+  CoordRef_Sites_1km_spectables$`26.2022-03-31`,
+  CoordRef_Sites_1km_spectables$`1.2022-03-30`,
   
-  cref_1km_spectables$`28.2022-03-29`,
-  cref_1km_spectables$`18.2022-03-28`,
-  cref_1km_spectables$`27.2022-03-26`,
-  cref_1km_spectables$`9.2022-03-25`,
-  cref_1km_spectables$`25.2022-03-23`,
+  CoordRef_Sites_1km_spectables$`28.2022-03-29`,
+  CoordRef_Sites_1km_spectables$`18.2022-03-28`,
+  CoordRef_Sites_1km_spectables$`27.2022-03-26`,
+  CoordRef_Sites_1km_spectables$`9.2022-03-25`,
+  CoordRef_Sites_1km_spectables$`25.2022-03-23`,
   
-  cref_1km_spectables$`8.2022-03-21`,
-  cref_1km_spectables$`7.2022-03-19`,
-  cref_1km_spectables$`24.2022-03-07`,
-  cref_1km_spectables$`23.2022-03-06`,
-  cref_1km_spectables$`19.2022-03-05`,
+  CoordRef_Sites_1km_spectables$`8.2022-03-21`,
+  CoordRef_Sites_1km_spectables$`7.2022-03-19`,
+  CoordRef_Sites_1km_spectables$`24.2022-03-07`,
+  CoordRef_Sites_1km_spectables$`23.2022-03-06`,
+  CoordRef_Sites_1km_spectables$`19.2022-03-05`,
   
-  cref_1km_spectables$`22.2022-02-27`,
-  cref_1km_spectables$`21.2022-02-15`,
-  cref_1km_spectables$`20.2022-02-14`
+  CoordRef_Sites_1km_spectables$`22.2022-02-27`,
+  CoordRef_Sites_1km_spectables$`21.2022-02-15`,
+  CoordRef_Sites_1km_spectables$`20.2022-02-14`
   
 )     
 
-# generate a species composition matrix
 SCM1 <- generate_speccomm(species_table_list)
 ```
 
-It is not necessary to change the row names of the matrix but We have the option to do so.
+&nbsp;
+
+It is not necessary to change the row names of the matrix but there is the option to do so.
 
 ```{r}
-# change the row names of the matrix
 SCM1 <- as.data.frame(SCM1)
 
 row.names(SCM1) <- c(
@@ -144,19 +193,27 @@ row.names(SCM1) <- c(
 SCM1 <- as.matrix(SCM1)
 ```
 
-There are many analyses that can be done with a species composition matrix. Here a species accumulation curve using functions from the `vegan` package is demonstrated.
+In an SCM generated using the `DivInsight` package, the rows represent sites, and the columns represent different species.
 
-```{r, fig.show='hold', fig.width=5, fig.height=3}
-# create a species accumulation curve 
+```{r, fig.show='hold', fig.width=8, fig.height=6}
+print(SCM1)
+```
+
+## Analyse the species composition matrix
+
+&nbsp;
+
+There are many analyses that can be used on an SCM; it is up to the user to decide which analyses to use. Here, a species accumulation curve using functions from the `vegan` package is created, plotted, and the output is displayed.
+
+```{r, fig.show='hold', fig.width=8, fig.height=6}
 speccurve1 <- specaccum(SCM1, method = "random")
 
-# plot the species accumulation curve
 plot(speccurve1, ci.type="poly", 
      col="blue", 
-     ci.col="lightblue",
-     main = "Species accumulation curve for 18 Sites"
+     ci.col="lightblue"
 )
+```
 
-# view the predictions from the species accumulation curve
+```{r}
 print(speccurve1)
 ```

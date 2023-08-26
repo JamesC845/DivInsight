@@ -7,12 +7,12 @@
 #' @param clusterised_object An object created by the clusterise_sites function.
 #' @param xlabel The X axis label with "Date" as default.
 #' @param ylabel The Y axis label with "Diversity (H)" as default.
-#' @param main_title The main label with "Shannon's H over Time" as default.
+#' @param main_title The main label with "Shannon's H Over Time" as default.
 #'
 #' @return Returns a ggplot2 scatter plot in the plot panel, showing the relationship between dates and diversity index values.
 #' @export
 #'
-#' @examples # create a scatter plot showing the diversity over time at the Caquetá province
+#' @examples # create a scatter plot showing species diversity values over time at the Caquetá province
 #'Colombia_Caquetá_dataframe <- subset(Colombia, stateProvince == "Caquetá")
 #'
 #'clusterised_Caquetá <- clusterise_sites(dataframe = Colombia_Caquetá_dataframe,
