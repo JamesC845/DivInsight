@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DivInsight</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,10 +24,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Coordinate_References.html">Clusterising sites using coordinates</a>
-    <a class="dropdown-item" href="../articles/Create_Speccomm.html">Creating a species composition matrix for further analysis</a>
-    <a class="dropdown-item" href="../articles/Group_Sites.html">Auto-grouping and charting</a>
-    <a class="dropdown-item" href="../articles/Intro_to_DivInsight.html">Introduction to DivInsight</a>
+    <a class="dropdown-item" href="../articles/create_speccomm.html">Species Composition Matrix Generation</a>
+    <a class="dropdown-item" href="../articles/diversity_statistics.html">Diversity Statistics: Auto Clustering, Charting, and Mapping</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -74,7 +72,7 @@
 
 
 <dt>main_title</dt>
-<dd><p>The main label with "Shannon's H over Time" as default.</p></dd>
+<dd><p>The main label with "Shannon's H Over Time" as default.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -86,7 +84,7 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># create a scatter plot showing the diversity over time at the Caquetá province</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># create a scatter plot showing species diversity values over time at the Caquetá province</span></span></span>
 <span class="r-in"><span><span class="va">Colombia_Caquetá_dataframe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">Colombia</span>, <span class="va">stateProvince</span> <span class="op">==</span> <span class="st">"Caquetá"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">clusterised_Caquetá</span> <span class="op">&lt;-</span> <span class="fu"><a href="clusterise_sites.html">clusterise_sites</a></span><span class="op">(</span>dataframe <span class="op">=</span> <span class="va">Colombia_Caquetá_dataframe</span>,</span></span>
