@@ -4,6 +4,18 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/1-diversity_statistics.html</loc>
+  </url>
+  <url>
+    <loc>/articles/2-create_speccomm.html</loc>
+  </url>
+  <url>
+    <loc>/articles/3-divstats_environment.html</loc>
+  </url>
+  <url>
+    <loc>/articles/4-taxon_range.html</loc>
+  </url>
+  <url>
     <loc>/articles/create_speccomm.html</loc>
   </url>
   <url>
@@ -17,6 +29,9 @@
   </url>
   <url>
     <loc>/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Andes.html</loc>
   </url>
   <url>
     <loc>/reference/clusterise_sites.html</loc>
@@ -37,6 +52,9 @@
     <loc>/reference/filter_groups_by_number.html</loc>
   </url>
   <url>
+    <loc>/reference/find_taxon_range.html</loc>
+  </url>
+  <url>
     <loc>/reference/gbif_to_dataframe.html</loc>
   </url>
   <url>
@@ -53,6 +71,27 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Malaysia_clst.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mapAdd_indivCirc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mapAdd_rangePoly.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mapAdd_siteCirc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mapStart_indivCirc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mapStart_rangePoly.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mapStart_siteCirc.html</loc>
   </url>
   <url>
     <loc>/reference/map_add.html</loc>
@@ -77,6 +116,18 @@
   </url>
   <url>
     <loc>/reference/plot_sites_trend_S.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_taxon_range.html</loc>
+  </url>
+  <url>
+    <loc>/reference/query_climate_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/query_elevation_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Singapore_clst.html</loc>
   </url>
   <url>
     <loc>/reference/site_regroup.html</loc>
