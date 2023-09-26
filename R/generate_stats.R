@@ -78,6 +78,10 @@ generate_stats <- function(clusterised_object){
 
     }
 
+    for (i in 1:length(clusterised_object[[1]])) {
+      stats_dataframe$N[i] <- length(clusterised_object[[1]][[i]][[1]])
+    }
+
     for(i in 1:length(clusterised_object[[1]])){
       stats_dataframe$S[i] <- clusterised_object[[1]][[i]]$scientificName %>% unique %>% length
     }

@@ -41,8 +41,10 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/create_speccomm.html">Species Composition Matrix Generation</a>
-    <a class="dropdown-item" href="articles/diversity_statistics.html">Diversity Statistics: Auto Clustering, Charting, and Mapping</a>
+    <a class="dropdown-item" href="articles/1-diversity_statistics.html">Diversity Statistics: Auto Clustering, Charting, and Mapping</a>
+    <a class="dropdown-item" href="articles/2-create_speccomm.html">Species Composition Matrix Generation</a>
+    <a class="dropdown-item" href="articles/3-divstats_environment.html">Analyzing Diversity-Environment Relationships</a>
+    <a class="dropdown-item" href="articles/4-taxon_range.html">Determining Taxon Range</a>
   </div>
 </li>
       </ul>
@@ -57,8 +59,51 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-Repurpose occurrence data for calculating diversity index values, creating visuals, and generating species composition matrices for a chosen taxon and location.
+  <main id="main" class="col-md-9"><p> </p>
+<div class="section level1">
+<div class="page-header"><h1 id="divinsight-providing-ecological-insights-from-historical-occurrence-data">DivInsight: Providing Ecological Insights from Historical Occurrence Data<a class="anchor" aria-label="anchor" href="#divinsight-providing-ecological-insights-from-historical-occurrence-data"></a>
+</h1></div>
+<p>Welcome to DivInsight, a tool for unlocking valuable ecological insights from historical occurrence data. This R package is designed to help researchers by providing powerful methods for ecological desk studies.</p>
+<p> </p>
+<div class="section level2">
+<h2 id="what-divinsight-can-do">What DivInsight Can Do<a class="anchor" aria-label="anchor" href="#what-divinsight-can-do"></a>
+</h2>
+<p>DivInsight takes datasets of taxon occurrences and enables you to:</p>
+<ul>
+<li>generate diversity index values for given locations</li>
+<li>understand species abundance and diversity changes over time</li>
+<li>create species composition matrices which can be used in other analyses</li>
+<li>query environmental data alongside diversity index values</li>
+<li>calculate and visualise taxon range</li>
+</ul>
+<p>Please check the articles tab at the top of this page to see these analyses in action!</p>
+<p> </p>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install DivInsight from CRAN by using the following command:</p>
+<pre class="{r}"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"DivInsight"</span><span class="op">)</span></span></code></pre>
+<p> </p>
+</div>
+<div class="section level2">
+<h2 id="upcoming-updates">Upcoming Updates<a class="anchor" aria-label="anchor" href="#upcoming-updates"></a>
+</h2>
+<ul>
+<li><p>DivInsight currently uses functions compatiable with datasets queried from the Global Biodiversity Information Facility (GBIF) in regards to occurrence data, as well as the Storm Glass datagrid (www.stormglass.io) in regards to environmental data. In the future, other data sources will be explored in order to potentially improve the validity of results provided by this package.</p></li>
+<li><p>Given the laborious process of querying large datasets from GBIF using R, a vignette tutorial will be provided to show users the most efficient way to do so. This will be especially helpful for users unfamiliar with the <code>rgbif</code> package.</p></li>
+<li><p>Various utility functions will be added to make scripts more efficient.</p></li>
+</ul>
+<p> </p>
+</div>
+<div class="section level2">
+<h2 id="feedback">Feedback<a class="anchor" aria-label="anchor" href="#feedback"></a>
+</h2>
+<p>Any kind of feedback on this new and upcoming R package is welcome. Whether you have any suggestions for specific research applications, ideas for new functions, or constructive criticism on how to improve the package’s functionality, your thoughts are highly appreciated. Please don’t hesitate to get in contact and share your feedback via email at <a href="mailto:jameschurchward1@outlook.com" class="email">jameschurchward1@outlook.com</a>.</p>
+<p> </p>
+</div>
+</div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">

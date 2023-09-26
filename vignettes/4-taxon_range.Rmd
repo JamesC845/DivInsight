@@ -1,0 +1,228 @@
+---
+title: "Determining Taxon Range"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Determining Taxon Range}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width = 1000)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DivInsight)
+data("Andes")
+library(dplyr)
+library(gridExtra) 
+library(geosphere)
+library(ggplot2)
+```
+
+## Introduction
+
+The `DivInsight` package can be used to calculate the physical distances between individuals in an occurrence dataset. These values can be used as an estimate of taxon range. 
+
+&nbsp;
+
+Included in the package is the Andes dataset, which contains occurrence data for the taxon 'Amphibia' at the Class level from 2011 to 2022. This data was queried from the Global Biodiversity Information Facility (GBIF) database using the `rgbif` package. Each row of the occurrence dataframe has data for an observed individual. The dataset has many variables but the most important ones for the functions in `DivInsight` pertain to taxa names, coordinate location, and dates of the observations. 
+
+&nbsp;
+
+## View occurrence dataframe
+
+```{r}
+head(Andes[c(2:4, 31:32, 45)], 10)
+```
+
+&nbsp;
+
+## Plot range of the three amphibian orders
+
+The function `mapStart_rangePoly()` can be used to plot a polygon on an interactive map using convex hull coordinates. This will create a shape using the outer most coordinates in a dataset. `mapAdd_rangePoly()` can be used to add polygon shapes onto an existing map using a different set of coordinates.
+
+&nbsp;
+
+In this example, all frog, salamander, and caecilian occurrence coordinates from all years available (2011-2022) in the Andes dataset are plotted to show the range of these taxa. It can be seen from this plot that frog species were observed throughout the entire Andes but salamanders and caecilians were only observed in the northern Andes.
+
+```{r, fig.show='hold', fig.width=10, fig.height=8}
+## split the occurrence dataframe into the order classes
+orders <- split(Andes, Andes$order)
+
+
+
+## start the map with all frog occurences
+map <- mapStart_rangePoly(
+  taxon_dataframe = orders$Anura,
+  site_name =  "Frogs",
+  colour = "darkgreen",
+  poly_opacity = 0.4
+)
+
+## add salamander occurrences
+map <- mapAdd_rangePoly(
+  existing_map = map,
+  taxon_dataframe =  orders$Caudata,
+  site_name =  "Salamanders",
+  colour = "darkorange",
+  poly_opacity = 0.4
+)
+
+## add caecilian occurrences
+map <- mapAdd_rangePoly(
+  existing_map = map,
+  taxon_dataframe =  orders$Gymnophiona,
+  site_name =  "Caecilians",
+  colour = "darkviolet",
+  poly_opacity = 0.4
+)
+
+## display the map
+map
+```
+
+&nbsp;
+
+## Calculate taxon range of three frog species
+
+The range in metres for a selected taxon can be calculated using functions available in the package. Here, we subset occurrence data for three species, and subsequently split each of these subsets into individual years. We then use base R functions to apply `find_taxon_range()` to each year for each species.
+
+&nbsp;
+
+```{r}
+## subset the chosen species
+species1 <- subset(Andes, species == "Pristimantis achatinus")  
+species2 <- subset(Andes, species == "Leptodactylus fragilis") 
+species3 <- subset(Andes, species == "Epipedobates anthonyi") 
+
+
+
+## split the species datsets by year into new objects
+species1_years <- split(species1, species1$year)
+species2_years <- split(species2, species2$year)
+species3_years <- split(species3, species3$year)
+
+
+
+## find the taxon range for each year of the first species and store into a datframe
+taxon_range_list_sp1 <- lapply(species1_years, find_taxon_range)
+taxon_range_df_sp1 <- data.frame(
+  Year = names(taxon_range_list_sp1),
+  Range_metres = as.numeric(taxon_range_list_sp1)
+)
+taxon_range_df_sp1
+
+
+
+## repeat the process for the second species
+taxon_range_list_sp2 <- lapply(species2_years, find_taxon_range)
+taxon_range_df_sp2 <- data.frame(
+  Year = names(taxon_range_list_sp2),
+  Range_metres = as.numeric(taxon_range_list_sp2)
+)
+taxon_range_df_sp2
+
+
+
+## repeat the process for the third species
+taxon_range_list_sp3 <- lapply(species3_years, find_taxon_range)
+taxon_range_df_sp3 <- data.frame(
+  Year = names(taxon_range_list_sp3),
+  Range_metres = as.numeric(taxon_range_list_sp3)
+)
+taxon_range_df_sp3
+```
+
+&nbsp;
+
+## Chart taxon range of three frog species
+
+Visualising the taxon range data can be done very simply by applying `plot_taxon_range()` to the taxon dataset. The X-axis represents each year and the Y-axis represents the maximum distance in kilometres between all coordinate pairs in the dataset. To allow users to asses the validity of these results, an abundance table and abundance line is included in this chart. This lets users make their own judgement regarding these results.
+
+&nbsp;
+
+```{r, fig.show='hold', fig.width=8, fig.height=6}
+## plot the taxon range values
+plot1 <- plot_taxon_range(species1, "Taxon Range of Pristimantis achatinus")  
+plot2 <- plot_taxon_range(species2, "Taxon Range of Leptodactylus fragilis") 
+plot3 <- plot_taxon_range(species3, "Taxon Range of Epipedobates anthonyi")
+
+
+## display the plots
+plot1
+plot2
+plot3
+```
+
+&nbsp;
+
+## Create map of taxon range of three frog species
+
+```{r, fig.show='hold', fig.width=10, fig.height=8}
+## create a map with a range polygon using the species' entire dataset then add polygons for separate years 
+map <- mapStart_rangePoly(species1, "Pristimantis achatinus", site_legend = F, poly_opacity = 0.4)
+
+map <- mapAdd_rangePoly(map, species1_years[[2]], "2012", "darkred")
+map <- mapAdd_rangePoly(map, species1_years[[6]], "2016", "darkblue")
+map <- mapAdd_rangePoly(map, species1_years[[10]], "2020", "darkgreen")
+
+
+
+## add the polygons for the second frog species
+map <- mapAdd_rangePoly(map, species2, "Leptodactylus fragilis", "black", site_legend = F)
+
+map <- mapAdd_rangePoly(map, species2_years[[2]], "2012", "darkred", site_legend = F)
+map <- mapAdd_rangePoly(map, species2_years[[6]], "2016", "darkblue", site_legend = F)
+map <- mapAdd_rangePoly(map, species2_years[[10]], "2020", "darkgreen", site_legend = F)
+
+
+
+## add polygons for the third frog species
+map <- mapAdd_rangePoly(map, species3, "Epipedobates anthonyi", "black", site_legend = F)
+
+map <- mapAdd_rangePoly(map, species3_years[[2]], "2012", "darkred", site_legend = F)
+map <- mapAdd_rangePoly(map, species3_years[[6]], "2016", "darkblue", site_legend = F)
+map <- mapAdd_rangePoly(map, species3_years[[10]], "2020", "darkgreen", site_legend = F)
+
+
+
+## display the map
+map
+```
+
+&nbsp;
+
+## Map the dispersal of a single species
+
+The `mapAdd_indivCirc()` can be used alongside previous functions to add circle points to represent the location of each observed individual. In this example, subsets of different years for this species are plotted every three years to see the dispersal and range over time. The dispersal of this species range seems to spread out and go south as time goes on.
+
+&nbsp;
+
+```{r, fig.show='hold', fig.width=10, fig.height=8}
+
+## create a map with a range polygon of the species
+map <- mapStart_rangePoly(species3, "Epipedobates anthonyi", "black", poly_opacity = 0.4)
+
+
+
+## add individual circle points for separate years
+map <- mapAdd_indivCirc(map, species3_years[[2]], "2012", "lightblue")
+map <- mapAdd_indivCirc(map, species3_years[[5]], "2015", "deepskyblue")
+map <- mapAdd_indivCirc(map, species3_years[[8]], "2018", "royalblue")
+map <- mapAdd_indivCirc(map, species3_years[[11]], "2021", "navy")
+
+
+
+## display the map
+map
+```
+
+&nbsp;

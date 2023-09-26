@@ -19,14 +19,19 @@ Imports:
     ggplot2,
     rgbif,
     stats,
-    graphics
+    graphics,
+    utils,
+    gridExtra,
+    httr,
+    jsonlite,
+    sp
 Depends: 
     R (>= 2.10)
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    gridExtra
+    grDevices
 Config/testthat/edition: 3
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr

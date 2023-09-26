@@ -1,0 +1,248 @@
+---
+title: "Analyzing Diversity-Environment Relationships"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyzing Diversity-Environment Relationships}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width = 1000)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DivInsight)
+data("Singapore_clst")
+data("Malaysia_clst")
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+```
+
+## Introduction
+
+The `DivInsight` package can be used to repurpose historical occurrence taxon data in order to both generate diversity statistics and query environmental data for different dates and locations.
+
+&nbsp;
+
+Included in the package are 'clusterised objects' named `Singapore_clst` and `Malaysia_clst`. These objects contain clusters of data for the taxon 'Plantae' at the Kingdom level from Singapore and Malaysia. This data was obtained by querying data from the Global Biodiversity Information Facility (GBIF) database using the `rgbif` package then organised into data clusters by using the `clusterise_sites()` function. Each data cluster can be considered a site, and in this instance, the function was set to form clusters to have a size of at least 30 observations and a radius of 5000 metres.
+
+## View data clusters for the first three sites
+
+When `clusterise_sites()` is used, metadata for each site is generated. Each row of the metadata has information for each site/cluster. This includes centred coordinates, the date of observations, and a site group label to represent groups of sites that are from different radii. 
+
+&nbsp;
+
+```{r}
+Singapore_clst[[1]][1:3]
+```
+
+## View metadata for the first three sites
+
+```{r}
+Singapore_clst[[2]][1:3,] 
+```
+
+## Query environmental data
+
+Once the desired data has been queried from RGBIF and clusterised, the next step is to query environmental data from the Storm Glass datagrid (www.stormglass.io). This can be done very easily using `query_climate_data()` and `query_elevation_data()` from `DivInsight`. A stats dataframe contains various abundance and diversity statistics and can be generated using `generate_stats()`.
+
+&nbsp;
+
+```{r}
+## generate and combine stats from both countries
+stats <- rbind(
+  generate_stats(Singapore_clst),
+  generate_stats(Malaysia_clst)
+)
+
+## store the API key (obtained by signing up to Storm Glass)
+API <- "9f8653c2-2efa-11ee-a654-0242ac130002-9f8654a8-2efa-11ee-a654-0242ac130002"
+
+## query climate data
+data_climate <- query_climate_data(stats_dataframe = stats, api_key = API)
+
+## query elevation data
+data_elev <- query_elevation_data(stats_dataframe = stats, api_key = API)
+```
+
+## Store the envrionmental data
+
+When queried, the environmental data is stored into nested lists. The best way to access this data, so it can be analysed conveniently, is to collate it into the stats dataframe using a series of `for` loops.
+
+&nbsp;
+
+The Storm Glass query functions obtain climate data, where available, by the hour. Considering that each row of the stats dataframe pertains to one site on a single day, which means 24 observations per site, the best way to store the data is to calculate the mean variable for each day/site. Users may edit this based on the needs of their own research
+
+&nbsp;
+
+```{r}
+## mean temperature (24hr)
+for(i in 1:length(stats[,1])){
+  suppressWarnings({stats$mean_temperature24hr[i] <- mean(data_climate[[i]]$hours$airTemperature$noaa)})
+}
+
+## mean temperature (day time)
+for(i in 1:length(stats[,1])){
+  suppressWarnings({stats$mean_temperatureDay[i] <- mean(data_climate[[i]]$hours$airTemperature$noaa[7:19])})
+}
+
+## mean precipitation
+for(i in 1:length(stats[,1])){
+  suppressWarnings({stats$mean_precipitation[i] <- mean(data_climate[[i]]$hours$precipitation$noaa)})
+}
+
+## mean humidity
+for(i in 1:length(stats[,1])){
+  suppressWarnings({stats$mean_humidity[i] <- mean(data_climate[[i]]$hours$humidity$noaa)})
+}
+
+## mean cloud cover
+for(i in 1:length(stats[,1])){
+  suppressWarnings({stats$mean_cloudCover[i] <- mean(data_climate[[i]]$hours$cloudCover$noaa)})
+}
+
+## wind speed
+for(i in 1:length(stats[,1])){
+  suppressWarnings({stats$mean_windSpeed[i] <- mean(data_climate[[i]]$hours$windSpeed$noaa)})
+}
+
+## elevation
+for(i in 1:length(stats[,1])){
+  suppressWarnings({stats$elevation[i] <- data_elev[[i]]$data
+  stats$elevation <- as.numeric(stats$elevation)})
+}
+```
+
+## Check the variables for outliers
+
+It is wise to check the stats for outliers or mistakes. For example, below are the the 50 lowest elevation values plotted using base R functions. There are a few negative values but upon checking the centred coordinates of these sites, it can be seen that most of these are from islands with low elevation. There is however, a single value of approximately -20 metres.
+
+&nbsp;
+
+```{r, fig.show='hold', fig.width=8, fig.height=6}
+plot(sort(stats$elevation) %>% head(50))
+  abline(h = -10, col = "darkviolet")
+```
+
+&nbsp;
+
+Something has gone wrong, so base R functions can be used to investigate. It can be seen by examining the outlier row from the stats dataframe that the centred coordinates only have two decimal places. Additionally, upon checking the raw data from the outlier cluster, it is obvious there is only one unique pair of coordinates for the entire data cluster. This pair also only has two decimal places. 
+
+&nbsp;
+
+Furthermore, upon checking the location of the centred coordinates for this site it is not surprising to see that it indicates a location in the ocean, south of Singapore, between its mainland and Bukom Island. It is likely that a recording mistake resulted in some digits being left out after the second decimal place, leading to an incorrect location. Therefore, this data should be removed.
+
+```{r}
+## find and store the row number that has an elevation value below -10 metres
+outlier_row_number <- which(stats$elevation < -10)
+outlier_row_number
+
+
+## view the outlier row
+stats[outlier_row_number,]
+
+
+## view the unique coordinate values of the outlier cluster
+Singapore_clst[[1]][[outlier_row_number]]$decimalLatitude %>% unique
+Singapore_clst[[1]][[outlier_row_number]]$decimalLongitude %>% unique
+
+
+## remove the outlier row from the stats dataframe
+stats <- stats[-outlier_row_number,]
+```
+
+
+## Analyse the wind speed variable
+
+At this point in the script, the environmental variable data and diversity statistics are all compiled into one dataframe ready to be analysed. Here, linear regression is used to model the relationship between the wind speed variable and Pielou's evenness index.
+
+&nbsp;
+
+The Storm Glass datagrid does not have complete climate data for all times and locations so there are likely to be some NAs in any queried climate data. Therefore, NA values will be removed by using the `complete.cases()`  function from base R.
+
+&nbsp;
+
+```{r, fig.show='hold', fig.width=10, fig.height=6}
+## check for NA values
+NA %in% stats$mean_windSpeed
+
+
+## filter out NAs 
+stats_windspeed_Complete <- stats[complete.cases(stats["mean_windSpeed"]),]
+
+
+## build a linear model and view the output
+lm1 <- lm(J ~ mean_windSpeed, data = stats_windspeed_Complete)
+
+summary(lm1)
+
+
+## plot the linear model
+ggplot(data = stats_windspeed_Complete, aes(x = mean_windSpeed, y = J)) +
+  
+  geom_point() +
+  
+  geom_smooth(method = "lm", se = FALSE, colour = "darkviolet") +
+  
+  labs(x = "mean wind speed  (m/s)", y = "Pielou's evenness (J)") +
+  
+  ggtitle("Linear Regression: Wind Speed vs. Species Evenness (y = 0.01x + 0.927 | R2 = 0.068, P = 0.016)") 
+```
+
+&nbsp;
+
+There is a statistically significant positive relationship between wind speed and Pielou's evenness (J). This suggests that as wind speed increases the evenness of plant species in Singapore and Peninsular Malaysia also increases. 
+
+&nbsp;
+
+Many ecological inferences can be made from the this finding but an obvious one may be that higher wind speeds cause a more balanced distribution of plant seeds.
+
+&nbsp;
+
+## Analyse the elevation variable
+
+Here, linear regression is used to model the relationship between the elevation variable and Pielou's evenness index.
+
+&nbsp;
+
+```{r, fig.show='hold', fig.width=10, fig.height=6}
+## check for NA values
+NA %in% stats$elevation
+
+
+## build a linear model
+lm2 <- lm(J ~ elevation, data = stats)
+
+summary(lm2)
+
+
+## create a scatter plot 
+ggplot(data = stats, aes(x = elevation, y = J)) +
+  
+  geom_point() +
+  
+  geom_smooth(method = "lm", se = FALSE, colour = "darkviolet") +
+  
+  labs(x = "elevation (m)", y = "Pielou's evenness (J)") +
+  
+  ggtitle("Linear Regression: Elevation vs. Species Evenness (y = -0.0000861x + 0.952 | R2 = 0.098, P = 0.002)") 
+```
+
+&nbsp;
+
+There is a statistically significant negative relationship between elevation and Pielou's evenness (J). This suggests that at higher elevations evenness of plant species decreased in Singapore and Peninsular Malaysia.
+
+&nbsp;
+
+An inference of this finding could be that harsher environmental factors lead to specialisation and/or competition meaning that certain species are likely to dominate habitats at higher elevations.
+
+&nbsp;
