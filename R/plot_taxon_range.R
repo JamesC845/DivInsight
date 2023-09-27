@@ -7,8 +7,8 @@
 #' @import gridExtra
 #'
 #' @param taxon_dataframe A dataset containing occurrence data for the taxon of interest.
+#' @param main_title A character value to set the main title of the plot.
 #' @param abundance_col A character value that determines the colour of the abundance annotations.
-#' @param title A character value to change the main title of the char
 #'
 #' @return Returns a ggplot2 bar plot, showing the relationship between years and taxon range.
 #' @export

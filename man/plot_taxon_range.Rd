@@ -9,9 +9,9 @@ plot_taxon_range(taxon_dataframe, main_title = "", abundance_col = "black")
 \arguments{
 \item{taxon_dataframe}{A dataset containing occurrence data for the taxon of interest.}
 
-\item{abundance_col}{A character value that determines the colour of the abundance annotations.}
+\item{main_title}{A character value to set the main title of the plot.}
 
-\item{title}{A character value to change the main title of the char}
+\item{abundance_col}{A character value that determines the colour of the abundance annotations.}
 }
 \value{
 Returns a ggplot2 bar plot, showing the relationship between years and taxon range.

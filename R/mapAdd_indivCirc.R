@@ -6,7 +6,7 @@
 #' @import dplyr
 #'
 #' @param existing_map A map object that has been created using the map_start function.
-#' @param clusterised_object An object created by the clusterise_sites functions.
+#' @param taxon_dataframe A dataframe with occurrence data for the chosen taxon.
 #' @param site_name An optional label to add the the coordinate pins.
 #' @param colour The colour of the coordinate pins.
 #'

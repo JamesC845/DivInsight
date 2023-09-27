@@ -29,10 +29,20 @@ analyses in action!
 
 ## Installation
 
-You can install DivInsight from CRAN by using the following command:
+You can install DivInsight 0.1.0 from CRAN by using the following
+command:
 
 ``` r
 install.packages("DivInsight")
+```
+
+ 
+
+Until the newest version has been accepted by CRAN DivInsight 1.2.0 can
+be download from GitHub using the following command:
+
+``` r
+remotes::install_github("JamesC845/DivInsight")
 ```
 
  

@@ -16,6 +16,8 @@ mapAdd_rangePoly(
 \arguments{
 \item{existing_map}{A map object that has been created using the map_start function.}
 
+\item{taxon_dataframe}{A dataframe with occurrence data for the chosen taxon.}
+
 \item{site_name}{An optional label to add the the coordinate pins.}
 
 \item{colour}{The colour of the coordinate pins.}
@@ -23,8 +25,6 @@ mapAdd_rangePoly(
 \item{site_legend}{A boolean value to choose to add a site name legend to the map.}
 
 \item{poly_opacity}{An optional value to set the opacity of the polygon.}
-
-\item{clusterised_object}{An object created by the clusterise_sites functions.}
 }
 \value{
 Coordinate pins to be added to an existing interactive map object.

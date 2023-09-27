@@ -14,11 +14,11 @@ mapAdd_indivCirc(
 \arguments{
 \item{existing_map}{A map object that has been created using the map_start function.}
 
+\item{taxon_dataframe}{A dataframe with occurrence data for the chosen taxon.}
+
 \item{site_name}{An optional label to add the the coordinate pins.}
 
 \item{colour}{The colour of the coordinate pins.}
-
-\item{clusterised_object}{An object created by the clusterise_sites functions.}
 }
 \value{
 Coordinate pins to be added to an existing interactive map object.

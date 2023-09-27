@@ -5,6 +5,7 @@
 #' @import leaflet
 #' @import sp
 #' @import dplyr
+#' @import grDevices
 #'
 #' @param taxon_dataframe A dataframe with occurrence data for the chosen taxon.
 #' @param site_name An optional label to add to the coordinate circles.
