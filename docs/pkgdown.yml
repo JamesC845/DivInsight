@@ -2,9 +2,9 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  1_diversity_statistics: 1_diversity_statistics.html
-  2_create_speccomm: 2_create_speccomm.html
-  3_divstats_environment: 3_divstats_environment.html
-  4_taxon_range: 4_taxon_range.html
-last_built: 2023-09-27T01:18Z
+  create_speccomm: create_speccomm.html
+  diversity_statistics: diversity_statistics.html
+  divstats_environment: divstats_environment.html
+  taxon_range: taxon_range.html
+last_built: 2023-10-09T00:50Z
 

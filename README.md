@@ -36,10 +36,8 @@ command:
 install.packages("DivInsight")
 ```
 
- 
-
-Until the newest version has been accepted by CRAN DivInsight 1.2.0 can
-be download from GitHub using the following command:
+Until the newest version has been accepted by CRAN, DivInsight 1.2.0 can
+be downloaded from GitHub using the following command:
 
 ``` r
 remotes::install_github("JamesC845/DivInsight")
@@ -49,12 +47,12 @@ remotes::install_github("JamesC845/DivInsight")
 
 ## Upcoming Updates
 
-- DivInsight currently uses functions compatiable with datasets queried
-  from the Global Biodiversity Information Facility (GBIF) in regards to
-  occurrence data, as well as the Storm Glass datagrid
-  (www.stormglass.io) in regards to environmental data. In the future,
-  other data sources will be explored in order to potentially improve
-  the validity of results provided by this package.
+- DivInsight currently uses functions compatible with datasets queried
+  from the Global Biodiversity Information Facility (GBIF) regarding
+  occurrence data, as well as datasets queried the Storm Glass datagrid
+  (www.stormglass.io) regarding environmental data. In the future, other
+  data sources will be explored in order to improve the validity of
+  results provided by this package.
 
 - Given the laborious process of querying large datasets from GBIF using
   R, a vignette tutorial will be provided to show users the most

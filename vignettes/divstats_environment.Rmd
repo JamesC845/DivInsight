@@ -74,7 +74,7 @@ data_climate <- query_climate_data(stats_dataframe = stats, api_key = API)
 data_elev <- query_elevation_data(stats_dataframe = stats, api_key = API)
 ```
 
-## Store the envrionmental data
+## Store the environmetnal data
 
 When queried, the environmental data is stored into nested lists. The best way to access this data, so it can be analysed conveniently, is to collate it into the stats dataframe using a series of `for` loops.
 
