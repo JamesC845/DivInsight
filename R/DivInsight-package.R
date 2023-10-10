@@ -5,6 +5,7 @@
 #' @importFrom dplyr combine
 #' @importFrom graphics abline
 #' @importFrom gridExtra combine
+#' @importFrom gridExtra grid.arrange
 #' @importFrom stats as.dist
 #' @importFrom stats cutree
 #' @importFrom stats hclust
